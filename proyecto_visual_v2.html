@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almacén que aprende — AS/RS + GA</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #F5F1E8;
+  --cream2: #EDE8DC;
+  --ink: #1C1917;
+  --ink2: #44403C;
+  --ink3: #78716C;
+  --rule: rgba(28,25,23,0.10);
+  --accent: #C2410C;
+  --accent-l: #FED7AA;
+  --hot: #DC2626;
+  --warm: #EA580C;
+  --mid: #F59E0B;
+  --midcool: #65A30D;
+  --cool: #0891B2;
+  --cold: #4338CA;
+  --good: #059669;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+}
+svg { display: block; max-width: 100%; height: auto; }
+
+/* ═══ HERO ═══ */
+.hero {
+  min-height: 82vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 6vw;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--cream) 0%, var(--cream2) 100%);
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(28,25,23,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; width: 100%; }
+.hero-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 60px; align-items: center; }
+@media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 28px;
+}
+.hero-eyebrow::before { content: ''; width: 36px; height: 1.5px; background: var(--accent); }
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(44px, 6.5vw, 88px);
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  margin-bottom: 28px;
+  color: var(--ink);
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-lead {
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.55;
+  max-width: 560px;
+  color: var(--ink2);
+  font-weight: 300;
+  margin-bottom: 32px;
+}
+.hero-meta {
+  display: flex; gap: 24px; flex-wrap: wrap;
+  font-size: 12px; color: var(--ink3);
+}
+.hero-meta div { display: flex; flex-direction: column; gap: 2px; }
+.hero-meta strong { color: var(--ink); font-size: 18px; font-family: 'Fraunces', serif; font-weight: 500; }
+
+/* ═══ SECCIONES ═══ */
+section {
+  padding: 110px 6vw;
+  position: relative;
+}
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-header { max-width: 780px; margin-bottom: 56px; }
+.section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-number::after {
+  content: ''; width: 60px; height: 1px; background: var(--accent); opacity: 0.4;
+}
+.section h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(34px, 4.5vw, 52px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+.section h2 em { font-style: italic; color: var(--accent); }
+.section-lead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink2);
+  font-weight: 300;
+}
+
+/* ═══ DARK SECTIONS ═══ */
+section.dark {
+  background: var(--ink);
+  color: var(--cream);
+}
+section.dark h2 { color: var(--cream); }
+section.dark h2 em { color: #FED7AA; }
+section.dark .section-number { color: #FED7AA; }
+section.dark .section-number::after { background: #FED7AA; }
+section.dark .section-lead { color: rgba(245, 241, 232, 0.65); }
+section.dark h3 { color: var(--cream); }
+
+/* ═══ COLUMNS ═══ */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.two-col.reverse { grid-template-columns: 1fr 1.2fr; }
+@media (max-width: 900px) {
+  .two-col, .two-col.reverse { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* ═══ BODY TEXT ═══ */
+.body-text p {
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 18px;
+  color: var(--ink2);
+}
+section.dark .body-text p { color: rgba(245, 241, 232, 0.75); }
+.body-text strong { color: var(--ink); font-weight: 600; }
+section.dark .body-text strong { color: var(--cream); }
+.body-text em { color: var(--accent); font-style: italic; }
+.body-text h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 32px 0 14px;
+  letter-spacing: -0.01em;
+}
+
+/* ═══ FIGURES ═══ */
+.figure {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 28px;
+}
+.figure.plain { background: transparent; border: none; padding: 0; }
+section.dark .figure {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+.figure-caption {
+  font-size: 12.5px;
+  color: var(--ink3);
+  margin-top: 16px;
+  font-style: italic;
+  line-height: 1.5;
+}
+section.dark .figure-caption { color: rgba(245,241,232,0.5); }
+
+/* ═══ CALLOUT ═══ */
+.callout {
+  background: var(--cream2);
+  border-left: 3px solid var(--accent);
+  padding: 22px 28px;
+  border-radius: 0 10px 10px 0;
+  margin: 28px 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+.callout strong { color: var(--ink); }
+section.dark .callout {
+  background: rgba(194,65,12,0.14);
+  border-color: #FED7AA;
+  color: rgba(245,241,232,0.85);
+}
+section.dark .callout strong { color: var(--cream); }
+
+/* ═══ STEP CARDS ═══ */
+.step-stack { display: flex; flex-direction: column; gap: 16px; }
+.step-card {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+section.dark .step-card {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+.step-num {
+  font-family: 'Fraunces', serif;
+  font-size: 34px;
+  font-weight: 400;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+section.dark .step-num { color: #FED7AA; }
+.step-body h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+section.dark .step-body h4 { color: var(--cream); }
+.step-body p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+section.dark .step-body p { color: rgba(245,241,232,0.7); }
+
+/* ═══ METRIC STACK ═══ */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 32px 0;
+}
+@media (max-width: 720px) { .metrics-row { grid-template-columns: 1fr; } }
+.metric-card {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 24px;
+}
+.metric-card.highlight { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.metric-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink3);
+  margin-bottom: 8px;
+}
+.metric-card.highlight .metric-label { color: #FED7AA; }
+.metric-value {
+  font-family: 'Fraunces', serif;
+  font-size: 44px; font-weight: 400; line-height: 1;
+  letter-spacing: -0.02em; margin-bottom: 6px;
+}
+.metric-delta { font-size: 12px; color: var(--ink3); }
+.metric-card.highlight .metric-delta { color: rgba(245,241,232,0.5); }
+
+/* ═══ COMPARISON CARDS ═══ */
+.comparison {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 36px 0;
+}
+@media (max-width: 900px) { .comparison { grid-template-columns: 1fr; } }
+.comp-card {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 26px;
+}
+.comp-card.winner { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.comp-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 10px; border-radius: 99px;
+  margin-bottom: 14px;
+}
+.comp-title {
+  font-family: 'Fraunces', serif;
+  font-size: 26px; font-weight: 400;
+  margin-bottom: 10px; letter-spacing: -0.01em;
+}
+.comp-desc { font-size: 13.5px; line-height: 1.5; color: var(--ink3); margin-bottom: 20px; min-height: 3.6em; }
+.comp-card.winner .comp-desc { color: rgba(245,241,232,0.55); }
+.comp-stat {
+  font-family: 'Fraunces', serif;
+  font-size: 30px; font-weight: 400;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+.comp-card.winner .comp-stat { border-color: rgba(255,255,255,0.15); }
+
+/* ═══ NAV DOTS ═══ */
+.nav-dots {
+  position: fixed;
+  right: 24px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 14px;
+  z-index: 100;
+}
+.nav-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(28,25,23,0.2);
+  cursor: pointer; transition: all 0.2s;
+  display: block;
+}
+.nav-dot:hover { background: var(--accent); }
+.nav-dot.active { background: var(--accent); transform: scale(1.5); }
+@media (max-width: 720px) { .nav-dots { display: none; } }
+
+/* ═══ HELPERS ═══ */
+.spacer-lg { height: 48px; }
+.spacer-xl { height: 80px; }
+</style>
+</head>
+<body>
+
+<!-- NAV DOTS -->
+<nav class="nav-dots">
+  <a class="nav-dot active" href="#hero" title="Inicio"></a>
+  <a class="nav-dot" href="#problema" title="El problema"></a>
+  <a class="nav-dot" href="#idea" title="La idea"></a>
+  <a class="nav-dot" href="#aprender" title="Cómo aprende"></a>
+  <a class="nav-dot" href="#evaluar" title="Cómo se evalúa"></a>
+  <a class="nav-dot" href="#politica" title="La política"></a>
+  <a class="nav-dot" href="#resultados" title="Resultados"></a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">Optimización logística con aprendizaje evolutivo</div>
+        <h1>Un almacén<br>que <em>aprende</em>.</h1>
+        <p class="hero-lead">Cómo un algoritmo genético descubre por sí solo dónde va cada caja — y por qué supera a las reglas escritas por humanos.</p>
+        <div class="hero-meta">
+          <div><span>Ítems</span><strong>60</strong></div>
+          <div><span>Órdenes simuladas</span><strong>2 000</strong></div>
+          <div><span>Políticas comparadas</span><strong>3</strong></div>
+        </div>
+      </div>
+      <div>
+        <!-- Hero visual: Rack con gradiente de demanda emergente -->
+        <svg viewBox="0 0 440 360" width="100%">
+          <defs>
+            <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="1.5"/>
+            </filter>
+          </defs>
+
+          <!-- I/O -->
+          <rect x="20" y="162" width="50" height="42" rx="4" fill="#C2410C"/>
+          <text x="45" y="188" text-anchor="middle" font-size="13" font-weight="700" fill="white" font-family="Inter">I/O</text>
+
+          <!-- Animated emergence: racks organized by heat -->
+          <g transform="translate(90, 40)">
+            <!-- Col 1 -->
+            <rect x="0"   y="0"   width="46" height="46" rx="4" fill="#DC2626"/>
+            <rect x="0"   y="54"  width="46" height="46" rx="4" fill="#DC2626"/>
+            <rect x="0"   y="108" width="46" height="46" rx="4" fill="#EA580C"/>
+            <rect x="0"   y="162" width="46" height="46" rx="4" fill="#EA580C"/>
+            <rect x="0"   y="216" width="46" height="46" rx="4" fill="#F59E0B"/>
+            <!-- Col 2 -->
+            <rect x="54"  y="0"   width="46" height="46" rx="4" fill="#DC2626"/>
+            <rect x="54"  y="54"  width="46" height="46" rx="4" fill="#EA580C"/>
+            <rect x="54"  y="108" width="46" height="46" rx="4" fill="#F59E0B"/>
+            <rect x="54"  y="162" width="46" height="46" rx="4" fill="#CA8A04"/>
+            <rect x="54"  y="216" width="46" height="46" rx="4" fill="#65A30D"/>
+            <!-- Col 3 -->
+            <rect x="108" y="0"   width="46" height="46" rx="4" fill="#EA580C"/>
+            <rect x="108" y="54"  width="46" height="46" rx="4" fill="#F59E0B"/>
+            <rect x="108" y="108" width="46" height="46" rx="4" fill="#CA8A04"/>
+            <rect x="108" y="162" width="46" height="46" rx="4" fill="#65A30D"/>
+            <rect x="108" y="216" width="46" height="46" rx="4" fill="#14B8A6"/>
+            <!-- Col 4 -->
+            <rect x="162" y="0"   width="46" height="46" rx="4" fill="#F59E0B"/>
+            <rect x="162" y="54"  width="46" height="46" rx="4" fill="#CA8A04"/>
+            <rect x="162" y="108" width="46" height="46" rx="4" fill="#65A30D"/>
+            <rect x="162" y="162" width="46" height="46" rx="4" fill="#14B8A6"/>
+            <rect x="162" y="216" width="46" height="46" rx="4" fill="#0891B2"/>
+            <!-- Col 5 -->
+            <rect x="216" y="0"   width="46" height="46" rx="4" fill="#CA8A04"/>
+            <rect x="216" y="54"  width="46" height="46" rx="4" fill="#65A30D"/>
+            <rect x="216" y="108" width="46" height="46" rx="4" fill="#14B8A6"/>
+            <rect x="216" y="162" width="46" height="46" rx="4" fill="#0891B2"/>
+            <rect x="216" y="216" width="46" height="46" rx="4" fill="#4338CA"/>
+            <!-- Col 6 -->
+            <rect x="270" y="0"   width="46" height="46" rx="4" fill="#65A30D"/>
+            <rect x="270" y="54"  width="46" height="46" rx="4" fill="#14B8A6"/>
+            <rect x="270" y="108" width="46" height="46" rx="4" fill="#0891B2"/>
+            <rect x="270" y="162" width="46" height="46" rx="4" fill="#4338CA"/>
+            <rect x="270" y="216" width="46" height="46" rx="4" fill="#6D28D9"/>
+          </g>
+
+          <!-- Direction arrow -->
+          <g font-family="Inter">
+            <text x="225" y="330" text-anchor="middle" font-size="11" fill="#78716C">← cerca del I/O · muy demandado</text>
+            <text x="225" y="346" text-anchor="middle" font-size="11" fill="#78716C">lejos del I/O · poco demandado →</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     01 · EL PROBLEMA
+═══════════════════════════════════════════════ -->
+<section id="problema">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-number">01 · El problema</div>
+      <h2>Un almacén es una <em>pregunta</em> repetida miles de veces al día.</h2>
+      <p class="section-lead">Llega una caja. Hay 60 posiciones libres. ¿Dónde va? Esa decisión, repetida constantemente, define si el almacén es eficiente o lento.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="body-text">
+        <h3>La distancia importa</h3>
+        <p>La grúa automática (<em>crane</em>) tarda más cuanto más lejos esté la posición del punto I/O. Si pongo una caja muy pedida al fondo, cada recuperación será lenta. Si la pongo cerca, será rápida.</p>
+
+        <h3>Los carriles también</h3>
+        <p>Cada pasillo tiene dos carriles: exterior e interior. Si un ítem demandado queda en el carril interior con otro ítem delante, <strong>cada recuperación requiere mover primero al bloqueante</strong>. Ese movimiento extra es un bloqueo, y se repite cada vez.</p>
+
+        <p>La pregunta central es: <em>¿con qué criterio se asigna posición a cada caja cuando llega?</em> Eso es lo que decide una <strong>política de asignación</strong>.</p>
+      </div>
+
+      <div class="figure">
+        <svg viewBox="0 0 460 340" width="100%">
+          <g font-family="Inter">
+            <!-- Label top -->
+            <text x="230" y="20" text-anchor="middle" font-size="12" font-weight="600" fill="#78716C" letter-spacing="1">EL BLOQUEO EN DOS ESCENARIOS</text>
+
+            <!-- Scenario 1: sin bloqueo -->
+            <g transform="translate(10, 50)">
+              <text x="100" y="0" text-anchor="middle" font-size="13" font-weight="600" fill="#059669">✓ Sin bloqueo</text>
+
+              <!-- Carriles -->
+              <rect x="20" y="20" width="70" height="80" rx="4" fill="#D1FAE5" stroke="#059669" stroke-width="1"/>
+              <text x="55" y="50" text-anchor="middle" font-size="10" fill="#065F46">exterior</text>
+              <text x="55" y="66" text-anchor="middle" font-size="11" font-weight="600" fill="#065F46">libre</text>
+
+              <rect x="100" y="20" width="70" height="80" rx="4" fill="#DC2626"/>
+              <text x="135" y="50" text-anchor="middle" font-size="10" fill="white" opacity="0.8">interior</text>
+              <text x="135" y="68" text-anchor="middle" font-size="12" font-weight="700" fill="white">ITM-X</text>
+              <text x="135" y="84" text-anchor="middle" font-size="9" fill="white" opacity="0.7">objetivo</text>
+
+              <!-- Crane path -->
+              <path d="M 0 130 L 100 130" stroke="#059669" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+              <circle cx="0" cy="130" r="3" fill="#059669"/>
+              <text x="50" y="124" text-anchor="middle" font-size="11" fill="#059669">1 movimiento</text>
+
+              <text x="100" y="165" text-anchor="middle" font-size="10.5" fill="#78716C" font-style="italic">El crane entra, saca ITM-X, sale.</text>
+            </g>
+
+            <!-- Divider -->
+            <line x1="230" y1="60" x2="230" y2="230" stroke="#E5E1D8" stroke-dasharray="2 4"/>
+
+            <!-- Scenario 2: con bloqueo -->
+            <g transform="translate(250, 50)">
+              <text x="100" y="0" text-anchor="middle" font-size="13" font-weight="600" fill="#DC2626">✗ Con bloqueo</text>
+
+              <rect x="20" y="20" width="70" height="80" rx="4" fill="#FECACA" stroke="#DC2626" stroke-width="1"/>
+              <text x="55" y="50" text-anchor="middle" font-size="10" fill="#991B1B">exterior</text>
+              <text x="55" y="68" text-anchor="middle" font-size="12" font-weight="700" fill="#991B1B">ITM-Y</text>
+              <text x="55" y="84" text-anchor="middle" font-size="9" fill="#991B1B">delante</text>
+
+              <rect x="100" y="20" width="70" height="80" rx="4" fill="#DC2626"/>
+              <text x="135" y="50" text-anchor="middle" font-size="10" fill="white" opacity="0.8">interior</text>
+              <text x="135" y="68" text-anchor="middle" font-size="12" font-weight="700" fill="white">ITM-X</text>
+              <text x="135" y="84" text-anchor="middle" font-size="9" fill="white" opacity="0.7">bloqueado</text>
+
+              <!-- Triple path -->
+              <path d="M 0 115 L 20 115" stroke="#DC2626" stroke-width="2" stroke-dasharray="3 2" fill="none"/>
+              <path d="M 90 130 L 0 130 L 0 145 L 195 145" stroke="#DC2626" stroke-width="2" stroke-dasharray="3 2" fill="none"/>
+              <circle cx="0" cy="115" r="3" fill="#DC2626"/>
+              <text x="100" y="170" text-anchor="middle" font-size="11" fill="#DC2626">3 movimientos</text>
+
+              <text x="100" y="195" text-anchor="middle" font-size="10.5" fill="#78716C" font-style="italic">Sacar Y → apartar Y → recuperar X.</text>
+            </g>
+
+            <!-- Impact -->
+            <rect x="20" y="260" width="420" height="60" rx="8" fill="#FEF3C7" stroke="#CA8A04" stroke-width="1"/>
+            <text x="230" y="283" text-anchor="middle" font-size="13" font-weight="600" fill="#78350F">El bloqueo triplica el trabajo para una sola recuperación.</text>
+            <text x="230" y="304" text-anchor="middle" font-size="11" fill="#92400E" font-style="italic">Evitarlo = poner ítems demandados en el carril exterior.</text>
+          </g>
+        </svg>
+        <div class="figure-caption">Vista frontal de un canal del rack: dos carriles, un objetivo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     02 · LA IDEA CENTRAL
+═══════════════════════════════════════════════ -->
+<section class="dark" id="idea">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-number">02 · La idea central</div>
+      <h2>¿Y si el almacén <em>aprendiera</em> por sí solo?</h2>
+      <p class="section-lead">No darle reglas. Darle muchas propuestas y dejar que evolucione. Esa es la idea de un algoritmo genético aplicado aquí.</p>
+    </div>
+
+    <div class="two-col reverse">
+      <div class="body-text">
+        <p>Un algoritmo genético <strong>busca soluciones imitando la selección natural</strong>. Trabaja con una población de propuestas, evalúa cuáles son mejores, combina las buenas, y repite. Con el tiempo, las soluciones mejoran.</p>
+
+        <p>Aquí la pregunta es: <em>¿qué tan urgente es cada uno de los 60 ítems?</em> Un ítem urgente debe ir cerca del I/O; uno no urgente puede ir al fondo.</p>
+
+        <p>En lugar de decidir la urgencia a mano, el GA propone miles de combinaciones distintas y <strong>mide cuál funciona mejor</strong> simulando el almacén con cada una.</p>
+      </div>
+
+      <div class="figure">
+        <!-- Un cromosoma -->
+        <svg viewBox="0 0 480 260" width="100%">
+          <g font-family="Inter">
+            <text x="240" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#FED7AA" letter-spacing="1.5">UNA PROPUESTA DEL GA</text>
+            <text x="240" y="40" text-anchor="middle" font-size="10" fill="rgba(245,241,232,0.6)" font-style="italic">un número entre 0 y 1 para cada ítem</text>
+
+            <!-- Chromosome visual -->
+            <g>
+              <rect x="20"  y="70" width="52" height="80" rx="5" fill="#DC2626"/>
+              <text x="46"  y="105" text-anchor="middle" font-size="15" font-weight="600" fill="white">0.91</text>
+              <text x="46"  y="128" text-anchor="middle" font-size="9" fill="white" opacity="0.85">ITM-01</text>
+              <text x="46"  y="165" text-anchor="middle" font-size="9" fill="#FED7AA">urgencia alta</text>
+
+              <rect x="76"  y="70" width="52" height="80" rx="5" fill="#EA580C"/>
+              <text x="102" y="105" text-anchor="middle" font-size="15" font-weight="600" fill="white">0.74</text>
+              <text x="102" y="128" text-anchor="middle" font-size="9" fill="white" opacity="0.85">ITM-02</text>
+
+              <rect x="132" y="70" width="52" height="80" rx="5" fill="#F59E0B"/>
+              <text x="158" y="105" text-anchor="middle" font-size="15" font-weight="600" fill="white">0.52</text>
+              <text x="158" y="128" text-anchor="middle" font-size="9" fill="white" opacity="0.85">ITM-03</text>
+
+              <rect x="188" y="70" width="52" height="80" rx="5" fill="#CA8A04"/>
+              <text x="214" y="105" text-anchor="middle" font-size="15" font-weight="600" fill="white">0.44</text>
+              <text x="214" y="128" text-anchor="middle" font-size="9" fill="white" opacity="0.85">ITM-04</text>
+              <text x="214" y="165" text-anchor="middle" font-size="9" fill="#FED7AA">urgencia media</text>
+
+              <rect x="244" y="70" width="52" height="80" rx="5" fill="#65A30D"/>
+              <text x="270" y="105" text-anchor="middle" font-size="15" font-weight="600" fill="white">0.31</text>
+              <text x="270" y="128" text-anchor="middle" font-size="9" fill="white" opacity="0.85">ITM-05</text>
+
+              <rect x="300" y="70" width="52" height="80" rx="5" fill="#14B8A6"/>
+              <text x="326" y="105" text-anchor="middle" font-size="15" font-weight="600" fill="white">0.18</text>
+              <text x="326" y="128" text-anchor="middle" font-size="9" fill="white" opacity="0.85">ITM-06</text>
+
+              <rect x="356" y="70" width="52" height="80" rx="5" fill="#0891B2"/>
+              <text x="382" y="105" text-anchor="middle" font-size="15" font-weight="600" fill="white">0.08</text>
+              <text x="382" y="128" text-anchor="middle" font-size="9" fill="white" opacity="0.85">ITM-07</text>
+              <text x="382" y="165" text-anchor="middle" font-size="9" fill="#FED7AA">urgencia baja</text>
+
+              <text x="442" y="115" text-anchor="middle" font-size="22" fill="rgba(245,241,232,0.3)">···</text>
+              <text x="442" y="135" text-anchor="middle" font-size="10" fill="rgba(245,241,232,0.5)">60 en total</text>
+            </g>
+
+            <!-- Explanation -->
+            <g transform="translate(0, 200)">
+              <text x="240" y="20" text-anchor="middle" font-size="12" fill="rgba(245,241,232,0.6)" font-style="italic">Una propuesta del GA dice cuán urgente cree que es cada ítem.</text>
+              <text x="240" y="40" text-anchor="middle" font-size="12" fill="rgba(245,241,232,0.6)" font-style="italic">Habrá 50 propuestas distintas compitiendo por generación.</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     03 · CÓMO APRENDE (NUEVA SECCIÓN DETALLADA)
+═══════════════════════════════════════════════ -->
+<section id="aprender">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-number">03 · Cómo aprende</div>
+      <h2>La evolución en <em>cinco pasos</em>.</h2>
+      <p class="section-lead">No hay magia. El GA repite un ciclo simple muchas veces. Cada generación produce propuestas un poco mejores que la anterior. Aquí cada paso en detalle.</p>
+    </div>
+
+    <!-- Paso 1: Población inicial -->
+    <div class="two-col" style="margin-bottom:72px">
+      <div>
+        <div class="step-num" style="font-family:Fraunces,serif;font-size:56px;color:var(--accent);line-height:1;margin-bottom:12px">01</div>
+        <h3 style="font-family:Fraunces,serif;font-size:26px;font-weight:500;letter-spacing:-0.01em;margin-bottom:12px">Empezar con el caos</h3>
+        <div class="body-text">
+          <p>La primera generación se crea completamente al azar. 50 propuestas, cada una con 60 números aleatorios entre 0 y 1. <strong>Ninguna sabe nada sobre el almacén todavía.</strong></p>
+          <p>La mayoría serán pésimas. Alguna, por pura suerte, será decente. El GA no necesita que sean buenas al inicio — solo necesita algo de variedad sobre la cual empezar a trabajar.</p>
+        </div>
+      </div>
+      <div class="figure">
+        <svg viewBox="0 0 480 320" width="100%">
+          <g font-family="Inter">
+            <text x="240" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#78716C" letter-spacing="1.5">50 PROPUESTAS ALEATORIAS</text>
+
+            <!-- Grid 10 × 5 -->
+            <g transform="translate(30, 40)">
+              <!-- Row 1 -->
+              <rect x="0"   y="0" width="38" height="22" rx="2" fill="#DC2626" opacity="0.9"/>
+              <rect x="42"  y="0" width="38" height="22" rx="2" fill="#0891B2" opacity="0.7"/>
+              <rect x="84"  y="0" width="38" height="22" rx="2" fill="#F59E0B" opacity="0.8"/>
+              <rect x="126" y="0" width="38" height="22" rx="2" fill="#65A30D" opacity="0.75"/>
+              <rect x="168" y="0" width="38" height="22" rx="2" fill="#EA580C" opacity="0.85"/>
+              <rect x="210" y="0" width="38" height="22" rx="2" fill="#14B8A6" opacity="0.7"/>
+              <rect x="252" y="0" width="38" height="22" rx="2" fill="#DC2626" opacity="0.85"/>
+              <rect x="294" y="0" width="38" height="22" rx="2" fill="#4338CA" opacity="0.65"/>
+              <rect x="336" y="0" width="38" height="22" rx="2" fill="#CA8A04" opacity="0.8"/>
+              <rect x="378" y="0" width="38" height="22" rx="2" fill="#0891B2" opacity="0.7"/>
+              <text x="-10" y="16" text-anchor="end" font-size="9" fill="#78716C">#1</text>
+
+              <!-- Row 2-5 generated with varied colors -->
+              <rect x="0"   y="26" width="38" height="22" rx="2" fill="#14B8A6" opacity="0.7"/>
+              <rect x="42"  y="26" width="38" height="22" rx="2" fill="#EA580C" opacity="0.8"/>
+              <rect x="84"  y="26" width="38" height="22" rx="2" fill="#4338CA" opacity="0.6"/>
+              <rect x="126" y="26" width="38" height="22" rx="2" fill="#DC2626" opacity="0.85"/>
+              <rect x="168" y="26" width="38" height="22" rx="2" fill="#F59E0B" opacity="0.8"/>
+              <rect x="210" y="26" width="38" height="22" rx="2" fill="#0891B2" opacity="0.7"/>
+              <rect x="252" y="26" width="38" height="22" rx="2" fill="#65A30D" opacity="0.75"/>
+              <rect x="294" y="26" width="38" height="22" rx="2" fill="#CA8A04" opacity="0.8"/>
+              <rect x="336" y="26" width="38" height="22" rx="2" fill="#DC2626" opacity="0.9"/>
+              <rect x="378" y="26" width="38" height="22" rx="2" fill="#EA580C" opacity="0.85"/>
+              <text x="-10" y="42" text-anchor="end" font-size="9" fill="#78716C">#2</text>
+
+              <rect x="0"   y="52" width="38" height="22" rx="2" fill="#F59E0B" opacity="0.8"/>
+              <rect x="42"  y="52" width="38" height="22" rx="2" fill="#0891B2" opacity="0.7"/>
+              <rect x="84"  y="52" width="38" height="22" rx="2" fill="#DC2626" opacity="0.9"/>
+              <rect x="126" y="52" width="38" height="22" rx="2" fill="#14B8A6" opacity="0.7"/>
+              <rect x="168" y="52" width="38" height="22" rx="2" fill="#4338CA" opacity="0.65"/>
+              <rect x="210" y="52" width="38" height="22" rx="2" fill="#CA8A04" opacity="0.8"/>
+              <rect x="252" y="52" width="38" height="22" rx="2" fill="#EA580C" opacity="0.85"/>
+              <rect x="294" y="52" width="38" height="22" rx="2" fill="#65A30D" opacity="0.75"/>
+              <rect x="336" y="52" width="38" height="22" rx="2" fill="#0891B2" opacity="0.7"/>
+              <rect x="378" y="52" width="38" height="22" rx="2" fill="#DC2626" opacity="0.9"/>
+              <text x="-10" y="68" text-anchor="end" font-size="9" fill="#78716C">#3</text>
+
+              <rect x="0"   y="78" width="38" height="22" rx="2" fill="#EA580C" opacity="0.85"/>
+              <rect x="42"  y="78" width="38" height="22" rx="2" fill="#DC2626" opacity="0.9"/>
+              <rect x="84"  y="78" width="38" height="22" rx="2" fill="#CA8A04" opacity="0.8"/>
+              <rect x="126" y="78" width="38" height="22" rx="2" fill="#0891B2" opacity="0.7"/>
+              <rect x="168" y="78" width="38" height="22" rx="2" fill="#14B8A6" opacity="0.7"/>
+              <rect x="210" y="78" width="38" height="22" rx="2" fill="#F59E0B" opacity="0.8"/>
+              <rect x="252" y="78" width="38" height="22" rx="2" fill="#65A30D" opacity="0.75"/>
+              <rect x="294" y="78" width="38" height="22" rx="2" fill="#DC2626" opacity="0.85"/>
+              <rect x="336" y="78" width="38" height="22" rx="2" fill="#4338CA" opacity="0.65"/>
+              <rect x="378" y="78" width="38" height="22" rx="2" fill="#EA580C" opacity="0.8"/>
+              <text x="-10" y="94" text-anchor="end" font-size="9" fill="#78716C">#4</text>
+
+              <rect x="0"   y="104" width="38" height="22" rx="2" fill="#65A30D" opacity="0.75"/>
+              <rect x="42"  y="104" width="38" height="22" rx="2" fill="#F59E0B" opacity="0.8"/>
+              <rect x="84"  y="104" width="38" height="22" rx="2" fill="#14B8A6" opacity="0.7"/>
+              <rect x="126" y="104" width="38" height="22" rx="2" fill="#DC2626" opacity="0.85"/>
+              <rect x="168" y="104" width="38" height="22" rx="2" fill="#EA580C" opacity="0.85"/>
+              <rect x="210" y="104" width="38" height="22" rx="2" fill="#0891B2" opacity="0.7"/>
+              <rect x="252" y="104" width="38" height="22" rx="2" fill="#CA8A04" opacity="0.8"/>
+              <rect x="294" y="104" width="38" height="22" rx="2" fill="#4338CA" opacity="0.6"/>
+              <rect x="336" y="104" width="38" height="22" rx="2" fill="#DC2626" opacity="0.9"/>
+              <rect x="378" y="104" width="38" height="22" rx="2" fill="#14B8A6" opacity="0.75"/>
+              <text x="-10" y="120" text-anchor="end" font-size="9" fill="#78716C">#5</text>
+
+              <text x="0" y="150" font-size="22" fill="#D6D3D1">⋮</text>
+              <text x="-10" y="154" text-anchor="end" font-size="9" fill="#78716C">...</text>
+            </g>
+
+            <text x="240" y="220" text-anchor="middle" font-size="11" fill="#78716C" font-style="italic">Filas = propuestas distintas · Columnas = scores para los 60 ítems</text>
+            <text x="240" y="240" text-anchor="middle" font-size="11" fill="#78716C" font-style="italic">Cada color representa un valor entre 0 y 1.</text>
+
+            <!-- Flecha hacia siguiente paso -->
+            <g transform="translate(180, 270)">
+              <rect width="120" height="30" rx="15" fill="#1C1917"/>
+              <text x="60" y="20" text-anchor="middle" font-size="12" fill="white">Siguiente paso →</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Paso 2: Evaluar cada propuesta -->
+    <div class="two-col reverse" style="margin-bottom:72px">
+      <div class="figure">
+        <svg viewBox="0 0 480 360" width="100%">
+          <g font-family="Inter">
+            <text x="240" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#78716C" letter-spacing="1.5">CÓMO SE PUNTÚA UNA PROPUESTA</text>
+
+            <!-- 3 pasos verticales -->
+            <!-- Paso a: Tomar scores -->
+            <g transform="translate(40, 45)">
+              <rect width="400" height="62" rx="8" fill="#FEF3C7" stroke="#CA8A04" stroke-width="1"/>
+              <circle cx="30" cy="31" r="14" fill="#CA8A04"/>
+              <text x="30" y="36" text-anchor="middle" font-size="13" font-weight="600" fill="white">A</text>
+              <text x="60" y="28" font-size="13" font-weight="600" fill="#78350F">Tomar los scores de la propuesta</text>
+              <text x="60" y="48" font-size="11" fill="#92400E">[0.91, 0.12, 0.74, 0.08, ...]</text>
+            </g>
+
+            <!-- Flecha -->
+            <path d="M 240 107 L 240 122" stroke="#9CA3AF" stroke-width="1.5" fill="none" marker-end="url(#ar-down)"/>
+            <defs>
+              <marker id="ar-down" viewBox="0 0 10 10" refX="5" refY="8" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M2 2L5 8L8 2" fill="none" stroke="#9CA3AF" stroke-width="1.5"/>
+              </marker>
+            </defs>
+
+            <!-- Paso b: Simular -->
+            <g transform="translate(40, 125)">
+              <rect width="400" height="110" rx="8" fill="#E0E7FF" stroke="#4338CA" stroke-width="1"/>
+              <circle cx="30" cy="31" r="14" fill="#4338CA"/>
+              <text x="30" y="36" text-anchor="middle" font-size="13" font-weight="600" fill="white">B</text>
+              <text x="60" y="28" font-size="13" font-weight="600" fill="#312E81">Simular el almacén con esos scores</text>
+              <text x="60" y="46" font-size="11" fill="#3730A3">Procesar 500 órdenes reales, usando esos scores para</text>
+              <text x="60" y="60" font-size="11" fill="#3730A3">decidir dónde guardar cada caja y cuándo recuperarla.</text>
+
+              <!-- Mini icon -->
+              <g transform="translate(80, 72)">
+                <rect x="0"   y="0" width="14" height="14" rx="1" fill="#4338CA" opacity="0.3"/>
+                <rect x="16"  y="0" width="14" height="14" rx="1" fill="#4338CA" opacity="0.5"/>
+                <rect x="32"  y="0" width="14" height="14" rx="1" fill="#4338CA" opacity="0.7"/>
+                <rect x="48"  y="0" width="14" height="14" rx="1" fill="#4338CA" opacity="0.9"/>
+                <rect x="64"  y="0" width="14" height="14" rx="1" fill="#4338CA" opacity="0.6"/>
+                <rect x="80"  y="0" width="14" height="14" rx="1" fill="#4338CA" opacity="0.8"/>
+                <rect x="96"  y="0" width="14" height="14" rx="1" fill="#4338CA" opacity="0.4"/>
+                <rect x="112" y="0" width="14" height="14" rx="1" fill="#4338CA" opacity="0.3"/>
+                <text x="145" y="11" font-size="10" fill="#312E81" font-style="italic">orden 1 → 2 → 3 → ... → 500</text>
+              </g>
+            </g>
+
+            <path d="M 240 235 L 240 250" stroke="#9CA3AF" stroke-width="1.5" fill="none" marker-end="url(#ar-down)"/>
+
+            <!-- Paso c: Medir tiempo -->
+            <g transform="translate(40, 253)">
+              <rect width="400" height="80" rx="8" fill="#FED7AA" stroke="#C2410C" stroke-width="1"/>
+              <circle cx="30" cy="31" r="14" fill="#C2410C"/>
+              <text x="30" y="36" text-anchor="middle" font-size="13" font-weight="600" fill="white">C</text>
+              <text x="60" y="28" font-size="13" font-weight="600" fill="#7C2D12">Medir el tiempo medio del crane</text>
+              <text x="60" y="46" font-size="11" fill="#9A3412">Sumar los tiempos de todas las operaciones.</text>
+              <text x="60" y="60" font-size="11" fill="#9A3412">Dividir por 500.</text>
+              <!-- Result -->
+              <g transform="translate(280, 40)">
+                <rect width="110" height="32" rx="4" fill="white" stroke="#C2410C"/>
+                <text x="55" y="22" text-anchor="middle" font-size="14" font-family="Fraunces" font-weight="500" fill="#C2410C">3.74 s</text>
+              </g>
+              <text x="60" y="74" font-size="10" fill="#9A3412" font-style="italic">Este número es el <tspan font-weight="700">fitness</tspan> de la propuesta. Menor = mejor.</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <div class="step-num" style="font-family:Fraunces,serif;font-size:56px;color:var(--accent);line-height:1;margin-bottom:12px">02</div>
+        <h3 style="font-family:Fraunces,serif;font-size:26px;font-weight:500;letter-spacing:-0.01em;margin-bottom:12px">Poner a prueba cada propuesta</h3>
+        <div class="body-text">
+          <p>Esta es la parte crítica — y la más inteligente. Para saber si una propuesta es buena, el GA <strong>realmente simula el almacén con ella</strong>.</p>
+          <p>Toma los scores propuestos, los usa como criterio para colocar cajas durante 500 operaciones, y mide el tiempo total. Ese tiempo medio <em>es</em> la calificación de la propuesta.</p>
+        </div>
+        <div class="callout">
+          <strong>El truco:</strong> el GA no intenta adivinar qué ítems son demandados mirando los datos. Solo le importa que los scores propuestos, aplicados a la realidad, <em>produzcan tiempos bajos</em>. Esto le permite descubrir patrones sutiles que un humano no notaría.
+        </div>
+      </div>
+    </div>
+
+    <!-- Paso 3: Seleccionar y combinar -->
+    <div class="two-col" style="margin-bottom:72px">
+      <div>
+        <div class="step-num" style="font-family:Fraunces,serif;font-size:56px;color:var(--accent);line-height:1;margin-bottom:12px">03</div>
+        <h3 style="font-family:Fraunces,serif;font-size:26px;font-weight:500;letter-spacing:-0.01em;margin-bottom:12px">Seleccionar y combinar</h3>
+        <div class="body-text">
+          <p>Ahora el GA tiene 50 propuestas, cada una con su fitness (tiempo medio). Hora de hacer la próxima generación.</p>
+          <p><strong>Élite:</strong> los 5 mejores pasan intactos. Garantía de que nunca se pierde lo aprendido.</p>
+          <p><strong>Cruce:</strong> se eligen dos padres buenos y se crea un hijo mezclando sus genes. Para cada uno de los 60 ítems, se hereda el score de uno u otro padre al azar.</p>
+          <p><strong>Mutación:</strong> ocasionalmente, un gen del hijo recibe una pequeña perturbación aleatoria. Esto permite descubrir combinaciones que los padres no tenían.</p>
+        </div>
+      </div>
+      <div class="figure">
+        <svg viewBox="0 0 480 560" width="100%">
+          <g font-family="Inter">
+            <!-- Título -->
+            <text x="240" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#78716C" letter-spacing="1.5">CRUCE: DOS PADRES → UN HIJO</text>
+
+            <!-- ── PADRE 1 ── -->
+            <g transform="translate(85, 50)">
+              <text x="0" y="0" font-size="12" font-weight="600" fill="#DC2626">Padre 1</text>
+              <text x="66" y="0" font-size="10" fill="#78716C" font-style="italic">fitness 3.2 s</text>
+              <!-- 6 genes -->
+              <rect x="0"   y="10" width="44" height="36" rx="4" fill="#DC2626"/>
+              <text x="22" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.91</text>
+              <rect x="50"  y="10" width="44" height="36" rx="4" fill="#EA580C"/>
+              <text x="72" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.74</text>
+              <rect x="100" y="10" width="44" height="36" rx="4" fill="#0891B2"/>
+              <text x="122" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.12</text>
+              <rect x="150" y="10" width="44" height="36" rx="4" fill="#F59E0B"/>
+              <text x="172" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.55</text>
+              <rect x="200" y="10" width="44" height="36" rx="4" fill="#65A30D"/>
+              <text x="222" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.38</text>
+              <rect x="250" y="10" width="44" height="36" rx="4" fill="#DC2626"/>
+              <text x="272" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.87</text>
+            </g>
+
+            <!-- ── PADRE 2 ── -->
+            <g transform="translate(85, 120)">
+              <text x="0" y="0" font-size="12" font-weight="600" fill="#4338CA">Padre 2</text>
+              <text x="66" y="0" font-size="10" fill="#78716C" font-style="italic">fitness 3.5 s</text>
+              <rect x="0"   y="10" width="44" height="36" rx="4" fill="#EA580C"/>
+              <text x="22" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.68</text>
+              <rect x="50"  y="10" width="44" height="36" rx="4" fill="#0891B2"/>
+              <text x="72" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.15</text>
+              <rect x="100" y="10" width="44" height="36" rx="4" fill="#DC2626"/>
+              <text x="122" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.82</text>
+              <rect x="150" y="10" width="44" height="36" rx="4" fill="#14B8A6"/>
+              <text x="172" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.25</text>
+              <rect x="200" y="10" width="44" height="36" rx="4" fill="#EA580C"/>
+              <text x="222" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.71</text>
+              <rect x="250" y="10" width="44" height="36" rx="4" fill="#65A30D"/>
+              <text x="272" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.42</text>
+            </g>
+
+            <!-- ── MONEDAS (para cada gen, quién gana) ── -->
+            <text x="240" y="205" text-anchor="middle" font-size="10" fill="#78716C" letter-spacing="1.5">PARA CADA GEN, UNA MONEDA AL AIRE</text>
+            <g transform="translate(85, 215)">
+              <!-- Gen 1: P1 gana -->
+              <circle cx="22" cy="16" r="14" fill="#DC2626"/>
+              <text x="22" y="20" text-anchor="middle" font-size="10" font-weight="700" fill="white">P1</text>
+              <!-- Gen 2: P2 gana -->
+              <circle cx="72" cy="16" r="14" fill="#4338CA"/>
+              <text x="72" y="20" text-anchor="middle" font-size="10" font-weight="700" fill="white">P2</text>
+              <!-- Gen 3: P1 gana -->
+              <circle cx="122" cy="16" r="14" fill="#DC2626"/>
+              <text x="122" y="20" text-anchor="middle" font-size="10" font-weight="700" fill="white">P1</text>
+              <!-- Gen 4: P2 gana -->
+              <circle cx="172" cy="16" r="14" fill="#4338CA"/>
+              <text x="172" y="20" text-anchor="middle" font-size="10" font-weight="700" fill="white">P2</text>
+              <!-- Gen 5: P1 gana -->
+              <circle cx="222" cy="16" r="14" fill="#DC2626"/>
+              <text x="222" y="20" text-anchor="middle" font-size="10" font-weight="700" fill="white">P1</text>
+              <!-- Gen 6: P2 gana -->
+              <circle cx="272" cy="16" r="14" fill="#4338CA"/>
+              <text x="272" y="20" text-anchor="middle" font-size="10" font-weight="700" fill="white">P2</text>
+            </g>
+
+            <!-- ── HIJO ── -->
+            <g transform="translate(85, 290)">
+              <text x="0" y="0" font-size="12" font-weight="600" fill="#059669">Hijo</text>
+              <text x="38" y="0" font-size="10" fill="#78716C" font-style="italic">mezcla según monedas</text>
+              <!-- Hereda: P1, P2, P1, P2, P1, P2 -->
+              <rect x="0"   y="10" width="44" height="36" rx="4" fill="#DC2626"/>
+              <text x="22" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.91</text>
+              <rect x="50"  y="10" width="44" height="36" rx="4" fill="#0891B2"/>
+              <text x="72" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.15</text>
+              <rect x="100" y="10" width="44" height="36" rx="4" fill="#0891B2"/>
+              <text x="122" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.12</text>
+              <rect x="150" y="10" width="44" height="36" rx="4" fill="#14B8A6"/>
+              <text x="172" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.25</text>
+              <rect x="200" y="10" width="44" height="36" rx="4" fill="#65A30D"/>
+              <text x="222" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.38</text>
+              <rect x="250" y="10" width="44" height="36" rx="4" fill="#65A30D"/>
+              <text x="272" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.42</text>
+            </g>
+
+            <!-- ── FLECHAS: padres y monedas → hijo ── -->
+            <!-- Cada flecha va del padre correcto (según moneda) al gen del hijo -->
+            <!-- Gen 1 (P1): de padre1[0] → moneda1 → hijo[0] -->
+            <path d="M 107 90 L 107 215" stroke="#DC2626" stroke-width="1" stroke-dasharray="3 3" fill="none" opacity="0.5"/>
+            <path d="M 107 245 L 107 300" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <!-- Gen 2 (P2): de padre2[1] → moneda2 → hijo[1] -->
+            <path d="M 157 160 L 157 215" stroke="#4338CA" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <path d="M 157 245 L 157 300" stroke="#4338CA" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <!-- Gen 3 (P1) -->
+            <path d="M 207 90 L 207 215" stroke="#DC2626" stroke-width="1" stroke-dasharray="3 3" fill="none" opacity="0.5"/>
+            <path d="M 207 245 L 207 300" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <!-- Gen 4 (P2) -->
+            <path d="M 257 160 L 257 215" stroke="#4338CA" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <path d="M 257 245 L 257 300" stroke="#4338CA" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <!-- Gen 5 (P1) -->
+            <path d="M 307 90 L 307 215" stroke="#DC2626" stroke-width="1" stroke-dasharray="3 3" fill="none" opacity="0.5"/>
+            <path d="M 307 245 L 307 300" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <!-- Gen 6 (P2) -->
+            <path d="M 357 160 L 357 215" stroke="#4338CA" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <path d="M 357 245 L 357 300" stroke="#4338CA" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+
+            <!-- ── MUTACIÓN ── -->
+            <text x="240" y="380" text-anchor="middle" font-size="10" fill="#78716C" letter-spacing="1.5">+ MUTACIÓN (PEQUEÑO CAMBIO ALEATORIO)</text>
+            <g transform="translate(85, 390)">
+              <text x="0" y="0" font-size="12" font-weight="600" fill="#C2410C">Hijo mutado</text>
+              <rect x="0"   y="10" width="44" height="36" rx="4" fill="#DC2626"/>
+              <text x="22" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.91</text>
+              <rect x="50"  y="10" width="44" height="36" rx="4" fill="#0891B2"/>
+              <text x="72" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.15</text>
+              <rect x="100" y="10" width="44" height="36" rx="4" fill="#0891B2"/>
+              <text x="122" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.12</text>
+              <!-- Gen mutado con halo -->
+              <rect x="148" y="8" width="48" height="40" rx="5" fill="none" stroke="#C2410C" stroke-width="2.5" stroke-dasharray="4 2"/>
+              <rect x="150" y="10" width="44" height="36" rx="4" fill="#F59E0B"/>
+              <text x="172" y="33" text-anchor="middle" font-size="13" font-weight="700" fill="white">.49</text>
+              <rect x="200" y="10" width="44" height="36" rx="4" fill="#65A30D"/>
+              <text x="222" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.38</text>
+              <rect x="250" y="10" width="44" height="36" rx="4" fill="#65A30D"/>
+              <text x="272" y="33" text-anchor="middle" font-size="13" font-weight="500" fill="white">.42</text>
+              <!-- Anotación -->
+              <text x="172" y="72" text-anchor="middle" font-size="10" font-weight="600" fill="#C2410C">mutó de .25 a .49</text>
+            </g>
+
+            <!-- Caption final -->
+            <text x="240" y="500" text-anchor="middle" font-size="11" fill="#78716C" font-style="italic">Ahora el hijo es una propuesta nueva. Se evalúa</text>
+            <text x="240" y="518" text-anchor="middle" font-size="11" fill="#78716C" font-style="italic">su fitness y entra en la siguiente generación.</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Paso 4: Repetir y convergencia -->
+    <div class="two-col reverse">
+      <div class="figure">
+        <svg viewBox="0 0 480 320" width="100%">
+          <g font-family="Inter">
+            <text x="240" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#78716C" letter-spacing="1.5">EVOLUCIÓN DEL MEJOR FITNESS</text>
+
+            <!-- Y axis -->
+            <line x1="60" y1="50" x2="60" y2="250" stroke="#D6D3D1" stroke-width="1"/>
+            <text x="55" y="55" text-anchor="end" font-size="10" fill="#78716C">5.0 s</text>
+            <text x="55" y="150" text-anchor="end" font-size="10" fill="#78716C">4.0 s</text>
+            <text x="55" y="250" text-anchor="end" font-size="10" fill="#78716C">3.0 s</text>
+            <!-- Grid -->
+            <line x1="60" y1="150" x2="440" y2="150" stroke="#F5F5F4" stroke-dasharray="2 3"/>
+
+            <!-- X axis -->
+            <line x1="60" y1="250" x2="440" y2="250" stroke="#D6D3D1" stroke-width="1"/>
+            <text x="60" y="270" font-size="10" fill="#78716C">Gen 0</text>
+            <text x="250" y="270" text-anchor="middle" font-size="10" fill="#78716C">Gen 25</text>
+            <text x="440" y="270" text-anchor="end" font-size="10" fill="#78716C">Gen 50</text>
+
+            <!-- Curve of best fitness -->
+            <path d="M 60 65 Q 120 90 170 130 Q 220 175 270 205 Q 320 225 370 237 Q 400 244 440 246"
+                  fill="none" stroke="#C2410C" stroke-width="3"/>
+
+            <!-- Filled area below -->
+            <path d="M 60 65 Q 120 90 170 130 Q 220 175 270 205 Q 320 225 370 237 Q 400 244 440 246 L 440 250 L 60 250 Z"
+                  fill="#FED7AA" opacity="0.3"/>
+
+            <!-- Start and end markers -->
+            <circle cx="60" cy="65" r="6" fill="#C2410C" stroke="white" stroke-width="2"/>
+            <circle cx="440" cy="246" r="6" fill="#059669" stroke="white" stroke-width="2"/>
+
+            <!-- Annotations -->
+            <g transform="translate(75, 50)">
+              <rect x="0" y="0" width="110" height="30" rx="4" fill="white" stroke="#C2410C"/>
+              <text x="8" y="13" font-size="10" fill="#78716C">Inicio (aleatorio)</text>
+              <text x="8" y="25" font-size="12" font-weight="600" fill="#C2410C">4.82 s</text>
+            </g>
+            <g transform="translate(315, 215)">
+              <rect x="0" y="0" width="120" height="30" rx="4" fill="white" stroke="#059669"/>
+              <text x="8" y="13" font-size="10" fill="#78716C">Tras 50 generaciones</text>
+              <text x="8" y="25" font-size="12" font-weight="600" fill="#059669">3.10 s</text>
+            </g>
+
+            <!-- Mejora arrow -->
+            <text x="250" y="120" text-anchor="middle" font-size="14" font-weight="600" fill="#C2410C" font-family="Fraunces" font-style="italic">↓ 36% de mejora</text>
+
+            <!-- Phases -->
+            <text x="120" y="298" text-anchor="middle" font-size="9" fill="#78716C" font-style="italic">exploración rápida</text>
+            <text x="360" y="298" text-anchor="middle" font-size="9" fill="#78716C" font-style="italic">refinamiento lento</text>
+          </g>
+        </svg>
+        <div class="figure-caption">Fitness del mejor cromosoma a lo largo de las generaciones. Cae rápido al inicio, luego se estabiliza cerca del óptimo.</div>
+      </div>
+      <div>
+        <div class="step-num" style="font-family:Fraunces,serif;font-size:56px;color:var(--accent);line-height:1;margin-bottom:12px">04</div>
+        <h3 style="font-family:Fraunces,serif;font-size:26px;font-weight:500;letter-spacing:-0.01em;margin-bottom:12px">Repetir — y observar cómo mejora</h3>
+        <div class="body-text">
+          <p>El GA repite el ciclo (evaluar → seleccionar → combinar → mutar) una generación tras otra. Normalmente entre 30 y 100 veces.</p>
+          <p>Al principio, la mejora es <strong>rápida</strong>: cualquier propuesta razonable es mejor que el caos inicial. Luego la curva se aplana: el GA empieza a refinar. Pequeños ajustes producen pequeñas mejoras.</p>
+          <p>En algún punto <strong>converge</strong>: las propuestas casi no cambian entre generaciones. Eso significa que encontró una solución robusta. Ese es el cromosoma final que usaremos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     04 · CÓMO SE EVALÚA (nueva)
+═══════════════════════════════════════════════ -->
+<section class="dark" id="evaluar">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-number">04 · Cómo se evalúa</div>
+      <h2>La evaluación es el <em>corazón</em> del sistema.</h2>
+      <p class="section-lead">Todo el GA depende de una sola cosa: poder medir objetivamente si una propuesta es buena. Aquí es exactamente cómo se hace.</p>
+    </div>
+
+    <!-- El circuito completo -->
+    <div class="figure" style="margin-bottom:48px">
+      <svg viewBox="0 0 960 400" width="100%">
+        <defs>
+          <marker id="ar-flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M2 2L8 5L2 8" fill="none" stroke="#FED7AA" stroke-width="2"/>
+          </marker>
+        </defs>
+        <g font-family="Inter">
+          <!-- Paso 1: Input -->
+          <g transform="translate(20, 80)">
+            <rect width="150" height="240" rx="10" fill="rgba(254,215,170,0.08)" stroke="#FED7AA" stroke-width="1"/>
+            <text x="75" y="28" text-anchor="middle" font-size="11" font-weight="600" fill="#FED7AA" letter-spacing="1">ENTRADA</text>
+            <text x="75" y="52" text-anchor="middle" font-size="13" font-weight="500" fill="#F5F1E8">Un cromosoma</text>
+
+            <!-- Mini chromo -->
+            <g transform="translate(20, 70)">
+              <rect x="0"  y="0" width="20" height="20" rx="2" fill="#DC2626"/>
+              <rect x="22" y="0" width="20" height="20" rx="2" fill="#EA580C"/>
+              <rect x="44" y="0" width="20" height="20" rx="2" fill="#F59E0B"/>
+              <rect x="66" y="0" width="20" height="20" rx="2" fill="#65A30D"/>
+              <rect x="88" y="0" width="20" height="20" rx="2" fill="#0891B2"/>
+              <rect x="0"  y="22" width="20" height="20" rx="2" fill="#EA580C"/>
+              <rect x="22" y="22" width="20" height="20" rx="2" fill="#CA8A04"/>
+              <rect x="44" y="22" width="20" height="20" rx="2" fill="#14B8A6"/>
+              <rect x="66" y="22" width="20" height="20" rx="2" fill="#4338CA"/>
+              <rect x="88" y="22" width="20" height="20" rx="2" fill="#6D28D9"/>
+            </g>
+            <text x="75" y="135" text-anchor="middle" font-size="10" fill="rgba(245,241,232,0.6)">60 scores</text>
+            <text x="75" y="150" text-anchor="middle" font-size="10" fill="rgba(245,241,232,0.6)">en [0, 1]</text>
+
+            <text x="75" y="190" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.5)" font-style="italic">Es solo una</text>
+            <text x="75" y="204" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.5)" font-style="italic">propuesta.</text>
+            <text x="75" y="218" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.5)" font-style="italic">No sabemos</text>
+            <text x="75" y="232" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.5)" font-style="italic">si es buena.</text>
+          </g>
+
+          <!-- Flecha 1 -->
+          <path d="M 180 200 L 215 200" stroke="#FED7AA" stroke-width="2" marker-end="url(#ar-flow)" fill="none"/>
+
+          <!-- Paso 2: Transformar en policy -->
+          <g transform="translate(220, 80)">
+            <rect width="180" height="240" rx="10" fill="rgba(245,241,232,0.04)" stroke="rgba(245,241,232,0.2)" stroke-width="1"/>
+            <text x="90" y="28" text-anchor="middle" font-size="11" font-weight="600" fill="#FED7AA" letter-spacing="1">CONVERTIR</text>
+            <text x="90" y="52" text-anchor="middle" font-size="13" font-weight="500" fill="#F5F1E8">En una política</text>
+
+            <g transform="translate(20, 80)">
+              <rect width="140" height="40" rx="6" fill="rgba(254,215,170,0.12)" stroke="#FED7AA" stroke-width="1"/>
+              <text x="70" y="20" text-anchor="middle" font-size="11" fill="#F5F1E8">GAPolicy(scores)</text>
+              <text x="70" y="32" text-anchor="middle" font-size="9" fill="rgba(245,241,232,0.6)" font-style="italic">función de costo</text>
+            </g>
+
+            <text x="90" y="160" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.6)">Los scores se usan</text>
+            <text x="90" y="176" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.6)">para decidir dónde</text>
+            <text x="90" y="192" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.6)">guardar cada caja</text>
+            <text x="90" y="208" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.6)">(ver sección 05).</text>
+          </g>
+
+          <!-- Flecha 2 -->
+          <path d="M 410 200 L 445 200" stroke="#FED7AA" stroke-width="2" marker-end="url(#ar-flow)" fill="none"/>
+
+          <!-- Paso 3: Simular 500 órdenes -->
+          <g transform="translate(450, 50)">
+            <rect width="300" height="300" rx="10" fill="rgba(245,241,232,0.04)" stroke="rgba(245,241,232,0.2)" stroke-width="1"/>
+            <text x="150" y="28" text-anchor="middle" font-size="11" font-weight="600" fill="#FED7AA" letter-spacing="1">SIMULAR ALMACÉN</text>
+            <text x="150" y="52" text-anchor="middle" font-size="13" font-weight="500" fill="#F5F1E8">Procesar 500 órdenes históricas</text>
+
+            <!-- Mini timeline of orders -->
+            <g transform="translate(20, 80)">
+              <!-- Orden 1 -->
+              <rect x="0" y="0" width="36" height="22" rx="3" fill="#14B8A6"/>
+              <text x="18" y="15" text-anchor="middle" font-size="10" font-weight="600" fill="white">S</text>
+              <text x="18" y="35" text-anchor="middle" font-size="9" fill="rgba(245,241,232,0.6)">1.2 s</text>
+
+              <text x="42" y="14" font-size="14" fill="rgba(245,241,232,0.4)">→</text>
+
+              <rect x="58" y="0" width="36" height="22" rx="3" fill="#DC2626"/>
+              <text x="76" y="15" text-anchor="middle" font-size="10" font-weight="600" fill="white">R</text>
+              <text x="76" y="35" text-anchor="middle" font-size="9" fill="rgba(245,241,232,0.6)">1.8 s</text>
+
+              <text x="100" y="14" font-size="14" fill="rgba(245,241,232,0.4)">→</text>
+
+              <rect x="116" y="0" width="36" height="22" rx="3" fill="#14B8A6"/>
+              <text x="134" y="15" text-anchor="middle" font-size="10" font-weight="600" fill="white">S</text>
+              <text x="134" y="35" text-anchor="middle" font-size="9" fill="rgba(245,241,232,0.6)">0.9 s</text>
+
+              <text x="158" y="14" font-size="14" fill="rgba(245,241,232,0.4)">→</text>
+
+              <rect x="174" y="0" width="36" height="22" rx="3" fill="#DC2626" opacity="0.6"/>
+              <text x="192" y="15" text-anchor="middle" font-size="10" font-weight="600" fill="white">R</text>
+              <text x="192" y="35" text-anchor="middle" font-size="9" fill="#FECACA">2.8 s ⚠</text>
+
+              <text x="216" y="14" font-size="14" fill="rgba(245,241,232,0.4)">→</text>
+
+              <rect x="232" y="0" width="26" height="22" rx="3" fill="rgba(245,241,232,0.2)"/>
+              <text x="245" y="15" text-anchor="middle" font-size="9" fill="rgba(245,241,232,0.6)">...</text>
+            </g>
+
+            <text x="150" y="145" text-anchor="middle" font-size="10" fill="rgba(245,241,232,0.5)" font-style="italic">Cada orden: ¿dónde va? ¿hay bloqueo? ¿cuánto tardó?</text>
+
+            <!-- Leyenda -->
+            <g transform="translate(30, 170)">
+              <rect x="0" y="0" width="14" height="14" rx="2" fill="#14B8A6"/>
+              <text x="20" y="11" font-size="10" fill="rgba(245,241,232,0.7)">S = almacenar</text>
+              <rect x="110" y="0" width="14" height="14" rx="2" fill="#DC2626"/>
+              <text x="130" y="11" font-size="10" fill="rgba(245,241,232,0.7)">R = recuperar</text>
+              <rect x="220" y="0" width="14" height="14" rx="2" fill="#DC2626" opacity="0.6"/>
+              <text x="240" y="11" font-size="10" fill="rgba(245,241,232,0.7)">⚠ bloqueo</text>
+            </g>
+
+            <!-- Results accumulator -->
+            <g transform="translate(30, 210)">
+              <rect width="240" height="70" rx="8" fill="rgba(254,215,170,0.1)" stroke="#FED7AA" stroke-width="1" stroke-dasharray="3 3"/>
+              <text x="120" y="20" text-anchor="middle" font-size="10" fill="#FED7AA" letter-spacing="1">ACUMULAR TIEMPOS</text>
+              <text x="120" y="38" text-anchor="middle" font-size="11" fill="rgba(245,241,232,0.7)">1.2 + 1.8 + 0.9 + 2.8 + ... + 1.4</text>
+              <text x="120" y="55" text-anchor="middle" font-size="10" fill="rgba(245,241,232,0.5)">500 números</text>
+            </g>
+          </g>
+
+          <!-- Flecha 3 -->
+          <path d="M 760 200 L 795 200" stroke="#FED7AA" stroke-width="2" marker-end="url(#ar-flow)" fill="none"/>
+
+          <!-- Paso 4: Fitness -->
+          <g transform="translate(800, 80)">
+            <rect width="140" height="240" rx="10" fill="#FED7AA"/>
+            <text x="70" y="28" text-anchor="middle" font-size="11" font-weight="600" fill="#C2410C" letter-spacing="1">FITNESS</text>
+            <text x="70" y="52" text-anchor="middle" font-size="12" fill="#78350F">Promedio final</text>
+
+            <g transform="translate(20, 80)">
+              <rect width="100" height="50" rx="6" fill="white" stroke="#C2410C" stroke-width="2"/>
+              <text x="50" y="32" text-anchor="middle" font-size="24" font-family="Fraunces" font-weight="500" fill="#C2410C">3.74</text>
+            </g>
+            <text x="70" y="155" text-anchor="middle" font-size="10" fill="#78350F">segundos por</text>
+            <text x="70" y="170" text-anchor="middle" font-size="10" fill="#78350F">operación</text>
+
+            <text x="70" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#C2410C">Menor = mejor</text>
+            <text x="70" y="216" text-anchor="middle" font-size="10" fill="#78350F" font-style="italic">La propuesta que</text>
+            <text x="70" y="228" text-anchor="middle" font-size="10" fill="#78350F" font-style="italic">produce &lt;3.0 gana</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Key insight -->
+    <div class="callout">
+      <strong>Este proceso se ejecuta por cada propuesta, en cada generación.</strong> Con 50 propuestas × 50 generaciones = 2 500 simulaciones completas del almacén. Costoso, pero permite al GA ver en la realidad cuál score funciona y cuál no.
+    </div>
+
+    <!-- Por qué esto es inteligente -->
+    <div class="two-col" style="margin-top:48px">
+      <div>
+        <h3 style="font-family:Fraunces,serif;font-size:24px;font-weight:500;letter-spacing:-0.01em;margin-bottom:16px;color:#F5F1E8">Lo que permite descubrir</h3>
+        <div class="body-text">
+          <p>Al <em>medir en simulación</em> en vez de <em>adivinar con estadísticas</em>, el GA descubre patrones sutiles:</p>
+
+          <p>— <strong>Interacciones entre ítems:</strong> dos ítems demandados que compiten por el mismo pasillo se bloquean. El GA aprende a separarlos.</p>
+
+          <p>— <strong>Efecto de los carriles:</strong> un ítem pedido 10 veces pero siempre en carril interior causa 30 movimientos. El GA aprende a colocarlo en el exterior.</p>
+
+          <p>— <strong>Secuencias temporales:</strong> si dos ítems se piden seguidos, ponerlos cerca ahorra viajes. Sale de los datos.</p>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:Fraunces,serif;font-size:24px;font-weight:500;letter-spacing:-0.01em;margin-bottom:16px;color:#F5F1E8">El secreto del diseño</h3>
+        <div class="body-text">
+          <p>La fórmula del fitness es <em>extremadamente simple</em>: <strong>tiempo medio por operación</strong>.</p>
+
+          <p>Pero ese número pequeño contiene toda la complejidad del almacén: distancias, bloqueos, ítems faltantes — todo se traduce en tiempo.</p>
+
+          <p>El GA no tiene que entender por qué una propuesta es mala. Solo ve que su fitness es alto, la descarta, y sigue adelante con las mejores. La inteligencia <em>emerge</em> de miles de estas comparaciones.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     05 · LA POLÍTICA
+═══════════════════════════════════════════════ -->
+<section id="politica">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-number">05 · Aplicar lo aprendido</div>
+      <h2>Con los scores aprendidos, decidir dónde va cada caja es una <em>cuenta</em>.</h2>
+      <p class="section-lead">La función de costo combina los scores con dos señales más: distancia al I/O y quién está al lado. Elige la posición con menor costo.</p>
+    </div>
+
+    <!-- La fórmula -->
+    <div style="background:var(--cream2);border-radius:14px;padding:36px;margin-bottom:48px;text-align:center">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.15em;color:var(--ink3);margin-bottom:14px">LA FÓRMULA</div>
+      <div style="font-family:Fraunces,serif;font-size:clamp(18px,2.5vw,28px);font-style:italic;color:var(--ink);line-height:1.5">
+        costo(posición) = score_ítem × ( distancia + carril_interior + score_del_vecino )
+      </div>
+    </div>
+
+    <!-- Breakdown de los 3 factores -->
+    <div class="comparison">
+      <div class="comp-card">
+        <span class="comp-tag" style="background:#FED7AA;color:#C2410C">FACTOR 1</span>
+        <div class="comp-title">Distancia</div>
+        <div class="comp-desc">Cuán lejos está del I/O. Normalizado entre 0 (pegado al I/O) y 1 (al fondo).</div>
+        <div style="color:var(--accent);font-style:italic;font-size:14px;padding-top:14px;border-top:1px solid var(--rule)">"No mandes al fondo a un ítem urgente"</div>
+      </div>
+      <div class="comp-card">
+        <span class="comp-tag" style="background:#FED7AA;color:#C2410C">FACTOR 2</span>
+        <div class="comp-title">Carril</div>
+        <div class="comp-desc">Si la posición es carril interior, suma 1. Si es exterior, suma 0. Penaliza las posiciones bloqueables.</div>
+        <div style="color:var(--accent);font-style:italic;font-size:14px;padding-top:14px;border-top:1px solid var(--rule)">"No escondas atrás a un ítem urgente"</div>
+      </div>
+      <div class="comp-card">
+        <span class="comp-tag" style="background:#FED7AA;color:#C2410C">FACTOR 3</span>
+        <div class="comp-title">Vecino</div>
+        <div class="comp-desc">El score aprendido del ítem que está al lado. Si el vecino es urgente, esta posición causa bloqueos.</div>
+        <div style="color:var(--accent);font-style:italic;font-size:14px;padding-top:14px;border-top:1px solid var(--rule)">"No bloquees a un ítem más urgente que tú"</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:32px">
+      <strong>La clave es la multiplicación.</strong> Todo está multiplicado por el score del ítem. Para un ítem poco urgente (score 0.1), el costo total es pequeño — da igual dónde vaya. Para uno urgente (score 0.9), cualquier elección mala tiene un costo 9× mayor. <em>El minimizador sigue el gradiente: empuja los ítems urgentes a las mejores posiciones con mucha más fuerza.</em>
+    </div>
+
+    <!-- Rack emergente -->
+    <div class="figure plain" style="margin-top:56px">
+      <svg viewBox="0 0 900 330" width="100%">
+        <g font-family="Inter">
+          <text x="225" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#78716C" letter-spacing="1.5">CON POLÍTICA ALEATORIA</text>
+          <text x="675" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#C2410C" letter-spacing="1.5">CON GAPOLICY APRENDIDA</text>
+
+          <!-- I/O 1 -->
+          <rect x="30" y="160" width="34" height="42" rx="4" fill="#C2410C"/>
+          <text x="47" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="white">I/O</text>
+
+          <!-- Rack Random: caótico -->
+          <g transform="translate(80, 60)">
+            <rect x="0"   y="0" width="36" height="36" rx="3" fill="#0891B2"/>
+            <rect x="40"  y="0" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="80"  y="0" width="36" height="36" rx="3" fill="#14B8A6"/>
+            <rect x="120" y="0" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="160" y="0" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="200" y="0" width="36" height="36" rx="3" fill="#0369A1"/>
+            <rect x="240" y="0" width="36" height="36" rx="3" fill="#F59E0B"/>
+
+            <rect x="0"   y="40" width="36" height="36" rx="3" fill="#14B8A6"/>
+            <rect x="40"  y="40" width="36" height="36" rx="3" fill="#0891B2"/>
+            <rect x="80"  y="40" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="120" y="40" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="160" y="40" width="36" height="36" rx="3" fill="#0369A1"/>
+            <rect x="200" y="40" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="240" y="40" width="36" height="36" rx="3" fill="#14B8A6"/>
+
+            <rect x="0"   y="80" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="40"  y="80" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="80"  y="80" width="36" height="36" rx="3" fill="#0369A1"/>
+            <rect x="120" y="80" width="36" height="36" rx="3" fill="#0891B2"/>
+            <rect x="160" y="80" width="36" height="36" rx="3" fill="#14B8A6"/>
+            <rect x="200" y="80" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="240" y="80" width="36" height="36" rx="3" fill="#DC2626"/>
+
+            <rect x="0"   y="120" width="36" height="36" rx="3" fill="#0891B2"/>
+            <rect x="40"  y="120" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="80"  y="120" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="120" y="120" width="36" height="36" rx="3" fill="#14B8A6"/>
+            <rect x="160" y="120" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="200" y="120" width="36" height="36" rx="3" fill="#0369A1"/>
+            <rect x="240" y="120" width="36" height="36" rx="3" fill="#F59E0B"/>
+          </g>
+
+          <text x="225" y="245" text-anchor="middle" font-size="13" font-style="italic" fill="#78716C">Los ítems rojos (demandados) están dispersos,</text>
+          <text x="225" y="262" text-anchor="middle" font-size="13" font-style="italic" fill="#78716C">algunos al fondo y en carriles interiores.</text>
+
+          <!-- Metrics -->
+          <g transform="translate(105, 282)">
+            <text x="0" y="14" font-size="11" fill="#78716C">tiempo medio:</text>
+            <text x="90" y="14" font-size="14" font-weight="700" fill="#0891B2" font-family="Fraunces">4.21 s</text>
+            <text x="0" y="32" font-size="11" fill="#78716C">bloqueos:</text>
+            <text x="90" y="32" font-size="13" font-weight="600" fill="#0891B2">18.4 %</text>
+          </g>
+
+          <!-- Divider -->
+          <line x1="450" y1="60" x2="450" y2="280" stroke="#D6D3D1" stroke-dasharray="3 5"/>
+
+          <!-- I/O 2 -->
+          <rect x="480" y="160" width="34" height="42" rx="4" fill="#C2410C"/>
+          <text x="497" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="white">I/O</text>
+
+          <!-- Rack GA: gradient -->
+          <g transform="translate(530, 60)">
+            <rect x="0"   y="0" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="40"  y="0" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="80"  y="0" width="36" height="36" rx="3" fill="#EA580C"/>
+            <rect x="120" y="0" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="160" y="0" width="36" height="36" rx="3" fill="#CA8A04"/>
+            <rect x="200" y="0" width="36" height="36" rx="3" fill="#14B8A6"/>
+            <rect x="240" y="0" width="36" height="36" rx="3" fill="#0891B2"/>
+
+            <rect x="0"   y="40" width="36" height="36" rx="3" fill="#DC2626"/>
+            <rect x="40"  y="40" width="36" height="36" rx="3" fill="#EA580C"/>
+            <rect x="80"  y="40" width="36" height="36" rx="3" fill="#EA580C"/>
+            <rect x="120" y="40" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="160" y="40" width="36" height="36" rx="3" fill="#65A30D"/>
+            <rect x="200" y="40" width="36" height="36" rx="3" fill="#0891B2"/>
+            <rect x="240" y="40" width="36" height="36" rx="3" fill="#0369A1"/>
+
+            <rect x="0"   y="80" width="36" height="36" rx="3" fill="#EA580C"/>
+            <rect x="40"  y="80" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="80"  y="80" width="36" height="36" rx="3" fill="#CA8A04"/>
+            <rect x="120" y="80" width="36" height="36" rx="3" fill="#65A30D"/>
+            <rect x="160" y="80" width="36" height="36" rx="3" fill="#14B8A6"/>
+            <rect x="200" y="80" width="36" height="36" rx="3" fill="#0369A1"/>
+            <rect x="240" y="80" width="36" height="36" rx="3" fill="#4338CA"/>
+
+            <rect x="0"   y="120" width="36" height="36" rx="3" fill="#F59E0B"/>
+            <rect x="40"  y="120" width="36" height="36" rx="3" fill="#CA8A04"/>
+            <rect x="80"  y="120" width="36" height="36" rx="3" fill="#65A30D"/>
+            <rect x="120" y="120" width="36" height="36" rx="3" fill="#14B8A6"/>
+            <rect x="160" y="120" width="36" height="36" rx="3" fill="#0891B2"/>
+            <rect x="200" y="120" width="36" height="36" rx="3" fill="#4338CA"/>
+            <rect x="240" y="120" width="36" height="36" rx="3" fill="#6D28D9"/>
+          </g>
+
+          <text x="675" y="245" text-anchor="middle" font-size="13" font-style="italic" fill="#C2410C">Orden emergente: rojos a la izquierda (cerca del I/O),</text>
+          <text x="675" y="262" text-anchor="middle" font-size="13" font-style="italic" fill="#C2410C">azules a la derecha (al fondo).</text>
+
+          <!-- Metrics -->
+          <g transform="translate(555, 282)">
+            <text x="0" y="14" font-size="11" fill="#78716C">tiempo medio:</text>
+            <text x="90" y="14" font-size="14" font-weight="700" fill="#C2410C" font-family="Fraunces">3.08 s</text>
+            <text x="0" y="32" font-size="11" fill="#78716C">bloqueos:</text>
+            <text x="90" y="32" font-size="13" font-weight="600" fill="#C2410C">10.1 %</text>
+          </g>
+
+          <!-- Legend at bottom -->
+          <g transform="translate(330, 320)" font-size="10">
+            <rect x="0" y="0" width="12" height="12" fill="#DC2626"/>
+            <text x="16" y="10" fill="#78716C">alta demanda</text>
+            <rect x="115" y="0" width="12" height="12" fill="#F59E0B"/>
+            <text x="131" y="10" fill="#78716C">media</text>
+            <rect x="200" y="0" width="12" height="12" fill="#0369A1"/>
+            <text x="216" y="10" fill="#78716C">baja</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     06 · RESULTADOS
+═══════════════════════════════════════════════ -->
+<section id="resultados">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-number">06 · El veredicto</div>
+      <h2>¿Y ganó el <em>aprendizaje</em>?</h2>
+      <p class="section-lead">Tres políticas compitiendo en el mismo almacén, con las mismas 500 órdenes. Un único ganador.</p>
+    </div>
+
+    <!-- Ranking -->
+    <div class="comparison">
+      <div class="comp-card">
+        <span class="comp-tag" style="background:#CFFAFE;color:#0E7490">BASELINE</span>
+        <div class="comp-title">Random</div>
+        <div class="comp-desc">Asigna cualquier posición libre al azar. No considera la demanda ni los carriles.</div>
+        <div class="comp-stat" style="color:#0E7490">4.21 s</div>
+      </div>
+      <div class="comp-card">
+        <span class="comp-tag" style="background:#FEF3C7;color:#92400E">HEURÍSTICA</span>
+        <div class="comp-title">ABC</div>
+        <div class="comp-desc">Clasifica por frecuencia histórica (A/B/C) y les asigna zonas. Regla clásica en logística.</div>
+        <div class="comp-stat" style="color:#92400E">3.67 s</div>
+      </div>
+      <div class="comp-card winner">
+        <span class="comp-tag" style="background:#FED7AA;color:#7C2D12">APRENDIDO</span>
+        <div class="comp-title">GAPolicy</div>
+        <div class="comp-desc" style="color:rgba(245,241,232,0.55)">Aprende scores con el GA y aplica la función de costo ponderada sobre ellos.</div>
+        <div class="comp-stat" style="color:#FED7AA">3.08 s</div>
+      </div>
+    </div>
+
+    <!-- Métricas adicionales -->
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-label">vs Random</div>
+        <div class="metric-value" style="color:var(--accent)">− 27 %</div>
+        <div class="metric-delta">tiempo medio reducido</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">vs ABC</div>
+        <div class="metric-value" style="color:var(--accent)">− 16 %</div>
+        <div class="metric-delta">supera la heurística clásica</div>
+      </div>
+      <div class="metric-card highlight">
+        <div class="metric-label">Bloqueo</div>
+        <div class="metric-value">− 45 %</div>
+        <div class="metric-delta">casi la mitad que Random</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:32px">
+      <strong>La conclusión no es solo "el GA es mejor que ABC".</strong> Es algo más profundo: en almacenes con demanda sesgada y restricciones de bloqueo, <em>políticas aprendidas automáticamente superan a las heurísticas manuales</em> — porque capturan interacciones sutiles que un humano no codificaría fácilmente.
+    </div>
+
+    <p style="margin-top:64px;font-size:20px;font-family:Fraunces,serif;font-style:italic;color:var(--ink2);text-align:center;line-height:1.5">
+      El almacén no necesita que le digas cómo organizarse.<br>
+      Solo necesita un criterio claro de qué significa estar bien organizado.
+    </p>
+  </div>
+</section>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const dots = document.querySelectorAll('.nav-dot');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        dots.forEach(d => d.classList.toggle('active', d.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
